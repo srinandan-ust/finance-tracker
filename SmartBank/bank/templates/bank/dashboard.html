@@ -18,7 +18,8 @@
 <body>
   <div class="container mt-4">
     <div class="text-center mb-4">
-      <h2>Welcome, {{ user.username }}</h2>
+      <h2>Welcome to IBS Bank,{{user.username}}! </h2>
+      
       <p class="lead">Account Balance: ₹{{ account.balance }}</p>
       <a href="{% url 'logout' %}" class="btn btn-warning">
         <i class="bi bi-box-arrow-right"></i> Logout

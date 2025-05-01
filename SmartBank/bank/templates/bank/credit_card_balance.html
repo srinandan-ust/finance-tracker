@@ -3,24 +3,29 @@
 {% block content %}
   <div class="container mt-5">
     <h2>Credit Card Balance Estimator</h2>
-    <form method="POST" action="{% url 'credit_card_balance' %}">
+
+    <form method="POST" action="{% url 'credit_card' %}">
       {% csrf_token %}
       <div class="mb-3">
         <label for="balance" class="form-label">Balance ($)</label>
         <input type="number" class="form-control" id="balance" name="balance" required>
       </div>
+
       <div class="mb-3">
         <label for="annual_rate" class="form-label">Annual Interest Rate (%)</label>
         <input type="number" class="form-control" id="annual_rate" name="annual_rate" required>
       </div>
+
       <div class="mb-3">
         <label for="months" class="form-label">Months</label>
         <input type="number" class="form-control" id="months" name="months" required>
       </div>
+
       <div class="mb-3">
         <label for="min_payment_percent" class="form-label">Minimum Payment Percentage (%)</label>
         <input type="number" class="form-control" id="min_payment_percent" name="min_payment_percent" value="5" required>
       </div>
+
       <button type="submit" class="btn btn-primary">Estimate Balance</button>
     </form>
 

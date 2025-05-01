@@ -156,57 +156,68 @@ def home_loan_view(request):
         years = int(request.POST.get('years'))
         eligible_amount = estimate_home_loan_eligibility(income, expenses, rate, years)
     return render(request, 'bank/home_loan.html', {'eligible_amount': eligible_amount})
+
+from django.shortcuts import render
+from .tools.finance_tools import (
+    calculate_credit_card_balance,
+    calculate_taxable_income,
+    plan_budget,
+    calculate_net_worth
+)
+
+
 @login_required
 def credit_card_view(request):
-    balance = None
+    credit_card_balance = None
     if request.method == 'POST':
-        # Safely get the values from the POST data
-        current_balance = request.POST.get('balance')
-        rate = request.POST.get('rate')
-        months = request.POST.get('months')
-        min_percent = request.POST.get('min_percent')
-
-        # Check if any value is None or empty and handle it gracefully
-        if current_balance is None or rate is None or months is None or min_percent is None:
-            messages.error(request, "Please fill in all the fields.")
-        else:
-            try:
-                # Convert the values to float or int after checking for None
-                current_balance = float(current_balance)
-                rate = float(rate)
-                months = int(months)
-                min_percent = float(min_percent)
-
-                # Call the function with the sanitized inputs
-                balance = calculate_credit_card_balance(current_balance, rate, months, min_percent)
-            except ValueError:
-                messages.error(request, "Invalid input. Please enter valid numeric values.")
-            except Exception as e:
-                messages.error(request, f"An unexpected error occurred: {str(e)}")
-
-    return render(request, 'bank/credit_card_balance.html', {'balance': balance})
+        try:
+            balance = float(request.POST.get('balance'))
+            annual_rate = float(request.POST.get('annual_rate'))
+            months = int(request.POST.get('months'))
+            min_percent = float(request.POST.get('min_payment_percent'))
+            credit_card_balance = calculate_credit_card_balance(balance, annual_rate, months, min_percent)
+        except (ValueError, TypeError):
+            credit_card_balance = "Invalid input. Please enter valid numbers."
+    return render(request, 'bank/credit_card_balance.html', {'credit_card_balance': credit_card_balance})
 
 @login_required
 def tax_view(request):
-    taxable = None
+    taxable_income = None
+    error_message = None
+
     if request.method == 'POST':
-        income = float(request.POST.get('income'))
-        deductions = float(request.POST.get('deductions'))
-        taxable = calculate_taxable_income(income, deductions)
-    return render(request, 'bank/tax.html', {'taxable': taxable})
+        try:
+            gross_income = float(request.POST.get('gross_income'))
+            deductions = float(request.POST.get('deductions'))
+            taxable_income = calculate_taxable_income(gross_income, deductions)
+        except (ValueError, TypeError):
+            error_message = "Invalid input. Please enter valid numbers."
+
+    return render(request, 'bank/tax.html', {
+        'taxable_income': taxable_income,
+        'error_message': error_message
+    })
+
 @login_required
 def budget_view(request):
-    result = None
+    budget = None
     if request.method == 'POST':
-        income = float(request.POST.get('income'))
-        expenses = float(request.POST.get('expenses'))
-        result = plan_budget(income, expenses)
-    return render(request, 'bank/budget.html', {'result': result})
+        try:
+            income = float(request.POST.get('income'))
+            expenses = float(request.POST.get('expenses'))
+            budget = plan_budget(income, expenses)
+        except (ValueError, TypeError):
+            budget = {"status": "Error", "message": "Invalid input. Please enter valid numbers."}
+    return render(request, 'bank/budget.html', {'budget': budget})
+
 @login_required
 def net_worth_view(request):
-    net = None
+    net_worth = None
     if request.method == 'POST':
-        assets = float(request.POST.get('assets'))
-        liabilities = float(request.POST.get('liabilities'))
-        net = calculate_net_worth(assets, liabilities)
-    return render(request, 'bank/net_worth.html', {'net': net})
+        try:
+            assets = float(request.POST.get('assets'))
+            liabilities = float(request.POST.get('liabilities'))
+            net_worth = calculate_net_worth(assets, liabilities)
+        except (ValueError, TypeError):
+            net_worth = "Invalid input. Please enter valid numbers."
+    return render(request, 'bank/net_worth_calculator.html', {'net_worth': net_worth})

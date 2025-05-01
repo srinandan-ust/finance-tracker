@@ -3,7 +3,7 @@
 {% block content %}
   <div class="container mt-5">
     <h2>Net Worth Calculator</h2>
-    <form method="POST" action="{% url 'calculate_net_worth' %}">
+    <form method="POST" action="{% url 'net_worth' %}">
       {% csrf_token %}
       <div class="mb-3">
         <label for="assets" class="form-label">Assets ($)</label>
