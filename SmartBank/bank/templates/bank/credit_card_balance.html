@@ -1,0 +1,41 @@
+{% extends 'bank/base.html' %}
+
+{% block content %}
+  <div class="container mt-5">
+    <h2>Credit Card Balance Estimator</h2>
+    <form method="POST" action="{% url 'credit_card_balance' %}">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="balance" class="form-label">Balance ($)</label>
+        <input type="number" class="form-control" id="balance" name="balance" required>
+      </div>
+      <div class="mb-3">
+        <label for="annual_rate" class="form-label">Annual Interest Rate (%)</label>
+        <input type="number" class="form-control" id="annual_rate" name="annual_rate" required>
+      </div>
+      <div class="mb-3">
+        <label for="months" class="form-label">Months</label>
+        <input type="number" class="form-control" id="months" name="months" required>
+      </div>
+      <div class="mb-3">
+        <label for="min_payment_percent" class="form-label">Minimum Payment Percentage (%)</label>
+        <input type="number" class="form-control" id="min_payment_percent" name="min_payment_percent" value="5" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Estimate Balance</button>
+    </form>
+
+    {% if credit_card_balance is not None %}
+      <div class="mt-3 alert alert-info">
+        <strong>Estimated Balance:</strong> ${{ credit_card_balance }}
+      </div>
+    {% endif %}
+
+    {% if messages %}
+      <div class="mt-3">
+        {% for message in messages %}
+          <div class="alert alert-warning">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

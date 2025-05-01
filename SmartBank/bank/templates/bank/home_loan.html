@@ -1,0 +1,37 @@
+{% extends 'bank/base.html' %}
+
+{% block content %}
+  <div class="container mt-4">
+    <h2>Home Loan Eligibility Calculator</h2>
+    
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="income">Monthly Income (₹)</label>
+        <input type="number" class="form-control" id="income" name="income" required>
+      </div>
+      <div class="form-group">
+        <label for="expenses">Monthly Expenses (₹)</label>
+        <input type="number" class="form-control" id="expenses" name="expenses" required>
+      </div>
+      <div class="form-group">
+        <label for="rate">Interest Rate (%)</label>
+        <input type="number" class="form-control" id="rate" name="rate" required>
+      </div>
+      <div class="form-group">
+        <label for="years">Loan Tenure (Years)</label>
+        <input type="number" class="form-control" id="years" name="years" required>
+      </div>
+      <button type="submit" class="btn btn-primary mt-3">Calculate</button>
+    </form>
+
+    {% if eligible_amount %}
+      <div class="mt-4">
+        <h4>Eligible Home Loan Amount</h4>
+        <p>Your eligible loan amount is: ₹{{ eligible_amount }}</p>
+      </div>
+    {% endif %}
+    
+  </div>
+{% endblock %}
+

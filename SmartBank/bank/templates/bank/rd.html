@@ -1,0 +1,22 @@
+{% extends "bank/base.html" %}
+
+
+{% block content %}
+  <h2>RD Calculation</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="monthly_deposit">Monthly Deposit:</label>
+    <input type="number" name="monthly_deposit" id="monthly_deposit" required step="0.01">
+    <label for="rate">Interest Rate (% per annum):</label>
+    <input type="number" name="rate" id="rate" required step="0.01">
+    <label for="months">Duration (months):</label>
+    <input type="number" name="months" id="months" required>
+    <button type="submit">Calculate Maturity</button>
+  </form>
+
+  {% if maturity %}
+    <p>Your RD maturity amount is ₹{{ maturity }}</p>
+  {% endif %}
+  
+  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}

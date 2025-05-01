@@ -1,0 +1,22 @@
+{% extends "bank/base.html" %}
+
+
+{% block content %}
+  <h2>FD Calculation</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="principal">Principal Amount:</label>
+    <input type="number" name="principal" id="principal" required step="0.01">
+    <label for="rate">Interest Rate (% per annum):</label>
+    <input type="number" name="rate" id="rate" required step="0.01">
+    <label for="years">Duration (years):</label>
+    <input type="number" name="years" id="years" required>
+    <button type="submit">Calculate Maturity</button>
+  </form>
+
+  {% if maturity %}
+    <p>Your FD maturity amount is ₹{{ maturity }}</p>
+  {% endif %}
+  
+  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}

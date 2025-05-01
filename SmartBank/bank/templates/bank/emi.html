@@ -1,0 +1,22 @@
+{% extends "bank/base.html" %}
+
+
+{% block content %}
+  <h2>EMI Calculation</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label for="principal">Principal Amount:</label>
+    <input type="number" name="principal" id="principal" required step="0.01">
+    <label for="rate">Interest Rate (% per annum):</label>
+    <input type="number" name="rate" id="rate" required step="0.01">
+    <label for="tenure">Tenure (months):</label>
+    <input type="number" name="tenure" id="tenure" required>
+    <button type="submit">Calculate EMI</button>
+  </form>
+
+  {% if emi %}
+    <p>Your EMI is ₹{{ emi }}</p>
+  {% endif %}
+  
+  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}
