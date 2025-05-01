@@ -28,7 +28,7 @@ def register_view(request):
             BankAccount.objects.get_or_create(user=user)
             login(request, user)
             messages.success(request, f"Welcome {user.username}! Your account has been created.")
-            return redirect('dashboard')  # Automatically redirect to the dashboard after registration
+            return redirect('login')  # Automatically redirect to the dashboard after registration
     else:
         form = RegisterForm()
     return render(request, 'bank/register.html', {'form': form})
