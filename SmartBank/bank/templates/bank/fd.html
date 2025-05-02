@@ -3,20 +3,30 @@
 
 {% block content %}
   <h2>FD Calculation</h2>
-  <form method="post">
+  <form method="post" class="needs-validation" novalidate>
     {% csrf_token %}
-    <label for="principal">Principal Amount:</label>
-    <input type="number" name="principal" id="principal" required step="0.01">
-    <label for="rate">Interest Rate (% per annum):</label>
-    <input type="number" name="rate" id="rate" required step="0.01">
-    <label for="years">Duration (years):</label>
-    <input type="number" name="years" id="years" required>
-    <button type="submit">Calculate Maturity</button>
+    <div class="mb-3">
+      <label for="principal" class="form-label">Principal Amount</label>
+      <input type="number" class="form-control" name="principal" id="principal" required step="0.01" placeholder="Enter principal amount">
+    </div>
+  
+    <div class="mb-3">
+      <label for="rate" class="form-label">Interest Rate (% per annum)</label>
+      <input type="number" class="form-control" name="rate" id="rate" required step="0.01" placeholder="Enter annual interest rate">
+    </div>
+  
+    <div class="mb-3">
+      <label for="years" class="form-label">Duration (years)</label>
+      <input type="number" class="form-control" name="years" id="years" required placeholder="Enter duration in years">
+    </div>
+  
+    <button type="submit" class="btn btn-success">Calculate Maturity</button>
   </form>
+  
 
   {% if maturity %}
     <p>Your FD maturity amount is ₹{{ maturity }}</p>
   {% endif %}
-  
-  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+  <!-- Back to Dashboard link -->
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
 {% endblock %}

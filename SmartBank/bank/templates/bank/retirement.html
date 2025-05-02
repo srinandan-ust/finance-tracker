@@ -4,6 +4,7 @@
   <h2>Retirement Corpus Estimation</h2>
   <form method="post">
     {% csrf_token %}
+ 
     <label for="savings">Current Savings:</label>
     <input type="number" name="savings" id="savings" required step="0.01">
     <label for="contribution">Monthly Contribution:</label>
@@ -12,12 +13,14 @@
     <input type="number" name="rate" id="rate" required step="0.01">
     <label for="years">Duration (years):</label>
     <input type="number" name="years" id="years" required>
-    <button type="submit">Estimate Corpus</button>
+    <button type="submit" class="btn btn-primary">Estimate Corpus</button>
+    </ul>
   </form>
 
   {% if corpus %}
     <p>Your estimated retirement corpus is ₹{{ corpus }}</p>
   {% endif %}
   
-  <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+  <!-- Back to Dashboard link -->
+  <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
 {% endblock %}
