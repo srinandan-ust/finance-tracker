@@ -8,8 +8,6 @@ The **Smart Bank** project (Called the Zest Finance tracker) integrates personal
  
 ## -> Included Financial Tools
  
-Each function is independent, input-validated, and returns results programmatically.
- 
 | Tool # | Tool Name                             | Description |
 |--------|---------------------------------------|-------------|
 | 1      | EMI Calculator                        | Computes monthly loan installment. |
