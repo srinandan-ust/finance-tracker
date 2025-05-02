@@ -18,6 +18,8 @@ from .tools.finance_tools import (  # Import necessary functions from finance_to
     calculate_net_worth
 )
 
+from .forms import LoanEstimationForm
+from .ml_model.loan_predictor import predict_loan_amount
 # Register
 def register_view(request):
     if request.method == 'POST':
@@ -156,32 +158,50 @@ def home_loan_view(request):
         years = int(request.POST.get('years'))
         eligible_amount = estimate_home_loan_eligibility(income, expenses, rate, years)
     return render(request, 'bank/home_loan.html', {'eligible_amount': eligible_amount})
-
-from django.shortcuts import render
-from .tools.finance_tools import (
-    calculate_credit_card_balance,
-    calculate_taxable_income,
-    plan_budget,
-    calculate_net_worth
-)
-
-
 @login_required
 def credit_card_view(request):
     credit_card_balance = None
+    error_message = None
+    months = None
+
     if request.method == 'POST':
         try:
+            # Get values from the form and convert to appropriate types
             balance = float(request.POST.get('balance'))
             annual_rate = float(request.POST.get('annual_rate'))
             months = int(request.POST.get('months'))
             min_percent = float(request.POST.get('min_payment_percent'))
+
+            # Call the function from finance_tools.py
             credit_card_balance = calculate_credit_card_balance(balance, annual_rate, months, min_percent)
         except (ValueError, TypeError):
-            credit_card_balance = "Invalid input. Please enter valid numbers."
-    return render(request, 'bank/credit_card_balance.html', {'credit_card_balance': credit_card_balance})
+            error_message = "Invalid input. Please enter valid numbers."
+
+    return render(request, 'bank/credit_card.html', {
+        'credit_card_balance': credit_card_balance,
+        'error_message': error_message,
+        'months': months
+    })
+
 
 @login_required
 def tax_view(request):
+    taxable_income = None
+    error_message = None
+
+    if request.method == 'POST':
+        try:
+            gross_income = float(request.POST.get('gross_income'))
+            deductions = float(request.POST.get('deductions'))
+            taxable_income = calculate_taxable_income(gross_income, deductions)
+        except (ValueError, TypeError):
+            error_message = "Invalid input. Please enter valid numbers."
+
+    return render(request, 'bank/tax.html', {
+        'taxable_income': taxable_income,
+        'error_message': error_message
+    })
+
     taxable_income = None
     error_message = None
 
@@ -221,3 +241,21 @@ def net_worth_view(request):
         except (ValueError, TypeError):
             net_worth = "Invalid input. Please enter valid numbers."
     return render(request, 'bank/net_worth_calculator.html', {'net_worth': net_worth})
+
+
+
+@login_required
+def loan_estimation_view(request):
+    prediction = None
+    if request.method == 'POST':
+        form = LoanEstimationForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            prediction = predict_loan_amount(
+                cd['age'], cd['monthly_income'], cd['credit_score'],
+                cd['loan_tenure_years'], cd['existing_loan_amount'], cd['num_of_dependents']
+            )
+    else:
+        form = LoanEstimationForm()
+    
+    return render(request, 'bank/loan_estimator.html', {'form': form, 'prediction': prediction})

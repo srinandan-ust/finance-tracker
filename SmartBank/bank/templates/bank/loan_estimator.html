@@ -1,0 +1,14 @@
+{% extends 'bank/base.html' %}
+{% block content %}
+<h2>Loan Amount Estimator</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Estimate Loan Amount</button>
+</form>
+
+{% if prediction is not None %}
+    <h3>Estimated Loan Amount: ₹{{ prediction }}</h3>
+{% endif %}
+<a href="{% url 'dashboard' %}">Back to Dashboard</a>
+{% endblock %}

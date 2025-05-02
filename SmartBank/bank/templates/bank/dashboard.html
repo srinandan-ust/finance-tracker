@@ -1,55 +1,98 @@
 {% load static %}
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bank Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet" />
   <style>
-    .card { margin: 20px 0; }
-    .btn-custom { width: 100%; }
+    .btn-block {
+      width: 100%;
+      margin-bottom: 15px;
+    }
+    .section {
+      margin-top: 40px;
+    }
+    .navbar-brand {
+      font-size: 1.5rem;
+    }
   </style>
 </head>
+
 <body>
 
-  <!-- ✅ Navigation Bar -->
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">IBS Bank</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <a class="navbar-brand" href="#">Zest Finance</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-        <ul class="navbar-nav">
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <a class="nav-link active" href="#">Dashboard</a>
+            <a class="nav-link active" aria-current="page" href="#"><span class="txt-danger">Home</span></a>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'emi' %}">EMI Calculator</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            <a class="nav-link" href="{% url 'sip' %}">SIP Calculator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'fd' %}">FD Calculator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'rd' %}">RD Calculator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'retirement' %}">Retirement Calculator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'home_loan' %}">Home Loan</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'credit_card' %}">Credit Card Estimator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'tax' %}">Tax Estimator</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'budget' %}">Budget Planner</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'net_worth' %}">Net Worth</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'logout' %}"><i class="bi bi-box-arrow-right btn btn-danger"></i> Logout</a>
           </li>
         </ul>
       </div>
     </div>
   </nav>
 
-  <!-- ✅ Main Container -->
-  <div class="container mt-4">
-    <div class="text-center mb-4">
-      <h2>Welcome to IBS Bank, {{ user.username }}!</h2>
+  <div class="container mt-5">
+    <!-- Welcome Section -->
+    <div class="text-center mb-5">
+      <h2>Welcome to Zest Finance, {{ user.username }}!</h2>
       <p class="lead">Account Balance: ₹{{ account.balance }}</p>
     </div>
 
-    <!-- ✅ Deposit & Withdraw -->
+    <!-- Deposit and Withdraw -->
     <div class="row mb-4">
       <div class="col-md-6">
         <form method="POST" action="{% url 'deposit' %}">
           {% csrf_token %}
           <div class="input-group">
             <input type="number" step="0.01" name="amount" placeholder="Deposit ₹" required class="form-control">
-            <button type="submit" class="btn btn-success">Deposit</button>
+            <button type="submit" class="btn btn-success">
+              <i class="bi bi-plus-circle"></i> Deposit
+            </button>
           </div>
         </form>
       </div>
@@ -58,219 +101,30 @@
           {% csrf_token %}
           <div class="input-group">
             <input type="number" step="0.01" name="amount" placeholder="Withdraw ₹" required class="form-control">
-            <button type="submit" class="btn btn-danger">Withdraw</button>
+            <button type="submit" class="btn btn-danger">
+              <i class="bi bi-dash-circle"></i> Withdraw
+            </button>
           </div>
         </form>
       </div>
     </div>
 
-    <!-- ✅ Accordion for Financial Tools -->
-    <div class="accordion" id="financeToolsAccordion">
+   
+      
 
-      <!-- ✅ EMI Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingEmi">
-          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseEmi">
-            EMI Calculator
-          </button>
-        </h2>
-        <div id="collapseEmi" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'emi' %}">
-              {% csrf_token %}
-              <input type="number" name="principal" step="0.01" placeholder="Principal" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="tenure" placeholder="Tenure (months)" class="form-control mb-2" required>
-              <button class="btn btn-primary">Calculate EMI</button>
-            </form>
-          </div>
-        </div>
+    <!-- AI Tool Section -->
+    <div class="section">
+      <div class="card p-4 shadow rounded">
+        <h4 class="mb-3">AI Loan Eligibility Predictor</h4>
+        <p>Estimate your loan eligibility using our intelligent prediction tool.</p>
+        <a href="{% url 'loan_estimator' %}" class="btn btn-primary">
+          <i class="bi bi-cpu"></i> Loan Amount Estimator
+        </a>
       </div>
-
-      <!-- ✅ SIP Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingSIP">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseSIP">
-            SIP Calculator
-          </button>
-        </h2>
-        <div id="collapseSIP" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'sip' %}">
-              {% csrf_token %}
-              <input type="number" name="monthly_investment" step="0.01" placeholder="Monthly Investment" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="years" placeholder="Years" class="form-control mb-2" required>
-              <button class="btn btn-primary">Calculate SIP</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ FD Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingFD">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFD">
-            FD Calculator
-          </button>
-        </h2>
-        <div id="collapseFD" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'fd' %}">
-              {% csrf_token %}
-              <input type="number" name="principal" step="0.01" placeholder="Principal" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="years" placeholder="Years" class="form-control mb-2" required>
-              <button class="btn btn-primary">Calculate FD</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ RD Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingRD">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRD">
-            RD Calculator
-          </button>
-        </h2>
-        <div id="collapseRD" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'rd' %}">
-              {% csrf_token %}
-              <input type="number" name="monthly_deposit" step="0.01" placeholder="Monthly Deposit" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="months" placeholder="Months" class="form-control mb-2" required>
-              <button class="btn btn-primary">Calculate RD</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Retirement Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingRetirement">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRetirement">
-            Retirement Corpus Estimator
-          </button>
-        </h2>
-        <div id="collapseRetirement" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'retirement' %}">
-              {% csrf_token %}
-              <input type="number" name="savings" step="0.01" placeholder="Current Savings" class="form-control mb-2" required>
-              <input type="number" name="contribution" step="0.01" placeholder="Annual Contribution" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Growth Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="years" placeholder="Years Until Retirement" class="form-control mb-2" required>
-              <button class="btn btn-primary">Estimate Corpus</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Home Loan Eligibility -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingHomeLoan">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseHomeLoan">
-            Home Loan Eligibility
-          </button>
-        </h2>
-        <div id="collapseHomeLoan" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'home_loan' %}">
-              {% csrf_token %}
-              <input type="number" name="income" step="0.01" placeholder="Monthly Income" class="form-control mb-2" required>
-              <input type="number" name="expenses" step="0.01" placeholder="Monthly Expenses" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="years" placeholder="Loan Tenure (years)" class="form-control mb-2" required>
-              <button class="btn btn-primary">Check Eligibility</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Credit Card Estimator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingCreditCard">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseCreditCard">
-            Credit Card Balance Estimator
-          </button>
-        </h2>
-        <div id="collapseCreditCard" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'credit_card' %}">
-              {% csrf_token %}
-              <input type="number" name="balance" step="0.01" placeholder="Current Balance" class="form-control mb-2" required>
-              <input type="number" name="rate" step="0.01" placeholder="Interest Rate (%)" class="form-control mb-2" required>
-              <input type="number" name="monthly_payment" step="0.01" placeholder="Monthly Payment" class="form-control mb-2" required>
-              <button class="btn btn-primary">Estimate Payoff</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Tax Estimator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingTax">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTax">
-            Tax Estimator
-          </button>
-        </h2>
-        <div id="collapseTax" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'tax' %}">
-              {% csrf_token %}
-              <input type="number" name="income" step="0.01" placeholder="Annual Income" class="form-control mb-2" required>
-              <input type="number" name="deductions" step="0.01" placeholder="Deductions" class="form-control mb-2" required>
-              <button class="btn btn-primary">Estimate Tax</button>
-            </form>
-          </div>
-        </div>
-      </div>
-
-      <!-- ✅ Net Worth Calculator -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingNetWorth">
-          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseNetWorth">
-            Net Worth Calculator
-          </button>
-        </h2>
-        <div id="collapseNetWorth" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-          <div class="accordion-body">
-            <form method="POST" action="{% url 'net_worth' %}">
-              {% csrf_token %}
-              <input type="number" name="assets" step="0.01" placeholder="Total Assets" class="form-control mb-2" required>
-              <input type="number" name="liabilities" step="0.01" placeholder="Total Liabilities" class="form-control mb-2" required>
-              <button class="btn btn-primary">Calculate Net Worth</button>
-            </form>
-          </div>
-        </div>
-      </div>
-      <!-- ✅ Budget Planner -->
-      <div class="accordion-item">
-        <h2 class="accordion-header" id="headingBudget">
-        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBudget">
-          Budget Planner
-        </button>
-        </h2>
-        <div id="collapseBudget" class="accordion-collapse collapse" data-bs-parent="#financeToolsAccordion">
-        <div class="accordion-body">
-        <form method="POST" action="{% url 'budget' %}">
-        {% csrf_token %}
-        <input type="number" name="income" step="0.01" placeholder="Monthly Income" class="form-control mb-2" required>
-        <input type="number" name="expenses" step="0.01" placeholder="Monthly Expenses" class="form-control mb-2" required>
-        <button class="btn btn-primary">Generate Budget</button>
-      </form>
     </div>
   </div>
-</div>
 
-
-    </div> <!-- End Accordion -->
-
-  </div> <!-- End Container -->
-
-  <!-- ✅ Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

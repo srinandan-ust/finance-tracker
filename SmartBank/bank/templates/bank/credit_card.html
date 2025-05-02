@@ -1,0 +1,63 @@
+<!-- credit_card.html -->
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Credit Card Balance Estimator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="container mt-5">
+    <h2>Credit Card Balance Estimator</h2>
+
+    <!-- Form for submitting balance, interest rate, etc. -->
+    <form method="POST" action="{% url 'credit_card' %}">
+      {% csrf_token %}
+      <div class="form-group">
+        <label for="balance">Current Balance (₹)</label>
+        <input type="number" name="balance" step="0.01" placeholder="Enter current balance" class="form-control mb-2" required>
+      </div>
+
+      <div class="form-group">
+        <label for="annual_rate">Annual Interest Rate (%)</label>
+        <input type="number" name="annual_rate" step="0.01" placeholder="Enter annual interest rate" class="form-control mb-2" required>
+      </div>
+
+      <div class="form-group">
+        <label for="months">Months to Pay Off</label>
+        <input type="number" name="months" placeholder="Enter months to pay off" class="form-control mb-2" required>
+      </div>
+
+      <div class="form-group">
+        <label for="min_payment_percent">Minimum Payment (%)</label>
+        <input type="number" name="min_payment_percent" step="0.01" placeholder="Enter minimum payment percent" class="form-control mb-2" required>
+      </div>
+
+      <button type="submit" class="btn btn-primary">Calculate</button>
+    </form>
+
+    <!-- Display the results or an error message -->
+    {% if credit_card_balance is not None %}
+  <div class="alert alert-success mt-4">
+    <h4>Estimated Balance After {{ months }} Months:</h4>
+    <p>₹{{ credit_card_balance|floatformat:2 }}</p>
+  </div>
+   {% elif error_message %}
+    <div class="alert alert-danger mt-4">
+    {{ error_message }}
+    </div>
+   {% endif %}
+
+    <!-- Back to Dashboard link -->
+    <a href="{% url 'dashboard' %}" class="btn btn-secondary mt-3">Back to Dashboard</a>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

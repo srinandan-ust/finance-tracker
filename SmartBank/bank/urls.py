@@ -18,8 +18,9 @@ urlpatterns = [
     path('finance/rd/', login_required(views.rd_view), name='rd'),
     path('finance/retirement/', login_required(views.retirement_view), name='retirement'),
     path('finance/home-loan/', login_required(views.home_loan_view), name='home_loan'),
-    path('finance/credit-card/', login_required(views.credit_card_view), name='credit_card'),
+    path('credit_card/', views.credit_card_view, name='credit_card'),
     path('finance/tax/', login_required(views.tax_view), name='tax'),
     path('finance/budget/', login_required(views.budget_view), name='budget'),
     path('finance/net-worth/', login_required(views.net_worth_view), name='net_worth'),
+    path('loan-estimator/', views.loan_estimation_view, name='loan_estimator'),
 ]
